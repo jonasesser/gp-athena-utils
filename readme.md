@@ -8,7 +8,7 @@ Copy the content of this repository to a new gp-athena-utils folder into your At
 
 ## Usage Clientside
 
-```
+```ts
 import * as alt from 'alt-client';
 import * as AthenaClient from '@AthenaClient/api';
 
@@ -20,7 +20,7 @@ export class MyOwnPluginClass {
             key: KEY_BINDS.MYSPECIALKEY,
             description: 'Do something special',
             identifier: 'myownplugin-specialkey',
-            keyDown: NoClipKeybind.doSomethingSpecial,
+            keyDown: MyOwnPluginClass.doSomethingSpecial,
         });
     }
 
