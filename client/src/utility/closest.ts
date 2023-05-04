@@ -1,13 +1,14 @@
+import { getClosestOfType } from '@AthenaShared/utility/vector';
 import * as alt from 'alt-client';
 import { IVector3 } from 'alt-shared';
-
-import { getClosestOfType } from '../../../shared/utility/closest';
 
 /**
  * A limited version of getting the closest vehicle.
  * It does not consider non-streamed vehicles.
  *
  * If a vehicle is out of the stream range it is unconsidered.
+ *
+ * @deprecated Use `Athena.utility.closest.getClosestVehicle` instead.
  *
  * @export
  * @param {IVector3} pos
@@ -23,6 +24,7 @@ export function getClosestVehicle(pos: IVector3): alt.Vehicle | undefined {
  * It does not consider non-streamed players.
  *
  * If a player is out of the stream range it is unconsidered.
+ *
  *
  * @export
  * @param {IVector3} pos

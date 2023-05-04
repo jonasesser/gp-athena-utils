@@ -14,7 +14,15 @@ export function distanceWithRef(referenceName: string, vector1: alt.IVector3, ve
     );
 }
 
-export function distance2d(referenceName: string, vector1: alt.IVector2, vector2: alt.IVector2) {
+export function distance2d(vector1: alt.IVector2, vector2: alt.IVector2) {
+    if (vector1 === undefined || vector2 === undefined) {
+        throw new Error('Distance2d AddVector => vector1 or vector2 is undefined');
+    }
+
+    return Math.sqrt(Math.pow(vector1.x - vector2.x, 2) + Math.pow(vector1.y - vector2.y, 2));
+}
+
+export function distance2dWithRef(referenceName: string, vector1: alt.IVector2, vector2: alt.IVector2) {
     if (vector1 === undefined || vector2 === undefined) {
         throw new Error('Distance2d AddVector => vector1 or vector2 is undefined, reference:' + referenceName);
     }
@@ -75,7 +83,7 @@ export function getClosestTypes<T extends { pos: alt.IVector3; valid: boolean }>
             }
         }
 
-        if (distance2d('vector5.ts', pos, elements[i][positionName]) > maxDistance) {
+        if (distance2d(pos, elements[i][positionName]) > maxDistance) {
             continue;
         }
 

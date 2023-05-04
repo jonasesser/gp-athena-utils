@@ -5,9 +5,11 @@ let inventory: Array<Item> = [];
 let toolbar: Array<Item> = [];
 let totalWeight: number;
 
+/**
+ * @depricated No used.
+ */
 export class InventoryUtil {
-
-    static init(){
+    public init() {
         onInventoryUpdate.add(InventoryUtil.onUpdate);
     }
 
@@ -17,15 +19,15 @@ export class InventoryUtil {
         totalWeight = _totalWeight;
     }
 
-    static getInventory(){
+    public getInventory() {
         return inventory;
     }
 
-    static getToolbar(){
+    public getToolbar() {
         return toolbar;
     }
 
-    static getTotalWeight(){
+    public getTotalWeight() {
         return totalWeight;
     }
 }

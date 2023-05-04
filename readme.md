@@ -25,9 +25,13 @@ export class MyOwnPluginClass {
     }
 
     static async doSomethingSpecial() {
-        const gpUtils = await AthenaClient.systems.plugins.useAPI('gpUtils');
+        const gpUtils = await AthenaClient.systems.plugins.useAPI('gputils');
         const vehicle = gpUtils.getClosestVehicle(alt.LocalPlayer.local.pos);
         ...
+
+        //another example serverside:
+        const gpUtils = await Athena.systems.plugins.useAPI('gputils');
+        gpUtils.emitAll(closestPlayers,...);
     }
 }
 ```
