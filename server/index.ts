@@ -4,6 +4,8 @@ import { addAPI } from '@AthenaServer/systems/plugins';
 import { getClosestPlayers } from './utility/closest';
 import { InventoryUtil } from './utility/inventory';
 import { emitAll } from './utility/emitHelper';
+import { PlayerExtension } from './overrides/player';
+import { MenuUtil } from './utility/menuUtil';
 
 const PLUGIN_NAME = 'gpAthenaUtils';
 
@@ -15,6 +17,9 @@ declare global {
 
 const InventoryUtilInstance = new InventoryUtil();
 InventoryUtilInstance.init();
+
+const MenuUtilInstance = new MenuUtil();
+MenuUtilInstance.init();
 
 const funcs = {
     emitAll,
@@ -28,9 +33,11 @@ const funcs = {
     isInInventory: InventoryUtilInstance.isInInventory,
     createCustomItem: InventoryUtilInstance.createCustomItem,
     addCustomItemToInventory: InventoryUtilInstance.addCustomItemToInventory,
+    inputMenu: MenuUtilInstance.inputMenu,
 };
 
 Athena.systems.plugins.registerPlugin(PLUGIN_NAME, () => {
+    PlayerExtension.init();
     addAPI('gputils', funcs);
     alt.log(`~lg~${PLUGIN_NAME} was Loaded`);
 });
