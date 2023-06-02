@@ -74,11 +74,12 @@
 </template>
 
 <script lang="ts">
+import WebViewEvents from '@ViewUtility/webViewEvents';
 import { defineComponent, defineAsyncComponent } from 'vue';
 import TestData from './utility/testData';
-import { WebViewEventNames } from '@AthenaShared/enums/webViewEvents';
+import { View_Events_Input_Menu } from '../shared/events';
 
-export const ComponentName = 'InputBox';
+export const ComponentName = View_Events_Input_Menu.InputBoxPageName;
 export default defineComponent({
     name: ComponentName,
     components: {
@@ -154,9 +155,7 @@ export default defineComponent({
             }
         },
         handleExit() {
-            if ('alt' in window) {
-                alt.emit(WebViewEventNames.CLOSE_PAGE);
-            }
+            WebViewEvents.emitClose();
         },
         submit() {
             const results = [];
@@ -167,30 +166,24 @@ export default defineComponent({
                 }
             }
 
-            if ('alt' in window) {
-                alt.emit(`${ComponentName}:Submit`, results);
-            }
-        },
-        relayClosePage(pageName: string) {
-            this.$emit('close-page', pageName);
+            WebViewEvents.emitClient(View_Events_Input_Menu.Submit, results);
         },
     },
     mounted() {
+        WebViewEvents.on(View_Events_Input_Menu.SetMenu, this.setMenu);
+        WebViewEvents.emitReady(ComponentName);
+
+        // Add Keybinds for In-Menu
         document.addEventListener('keyup', this.handlePress);
 
         if ('alt' in window) {
-            alt.on(`${ComponentName}:SetMenu`, this.setMenu);
-            alt.emit(`${ComponentName}:Ready`);
         } else {
             this.setMenu('Generic Example', TestData, { description: 'Hello, what the chicken...' });
         }
     },
     unmounted() {
+        // Remove Keybinds for In-Menu
         document.removeEventListener('keyup', this.handlePress);
-
-        if ('alt' in window) {
-            alt.off(`${ComponentName}:SetMenu`, this.setMenu);
-        }
     },
 });
 </script>

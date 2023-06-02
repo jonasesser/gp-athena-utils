@@ -6,7 +6,7 @@ import * as alt from 'alt-client';
 
 //TODO: Old v4.x style. Needs to be updated to v5.x style.
 
-const PAGE_NAME = 'InputBox';
+const PAGE_NAME = View_Events_Input_Menu.InputBoxPageName;
 let inputMenu: InputMenu;
 
 /**
@@ -23,33 +23,30 @@ class InternalFunctions implements ViewModel {
         // Need to add a sleep here because wheel menu inputs can be be too quick.
         await alt.Utils.wait(150);
 
-        const view = await AthenaClient.webview.get();
-        view.on(`${PAGE_NAME}:Ready`, InternalFunctions.ready);
-        view.on(`${PAGE_NAME}:Submit`, InternalFunctions.submit);
+        AthenaClient.webview.ready(PAGE_NAME, InternalFunctions.ready);
+        AthenaClient.webview.on(View_Events_Input_Menu.Submit, InternalFunctions.submit);
 
-        AthenaClient.webview.openPages(PAGE_NAME, true, InternalFunctions.close);
+        AthenaClient.webview.openPages(PAGE_NAME, true, InternalFunctions.onEscape);
         AthenaClient.webview.focus();
         AthenaClient.webview.showCursor(true);
-
         alt.toggleGameControls(false);
         alt.Player.local.isMenuOpen = true;
     }
 
-    static async close(isNotCancel = false, shouldClosePage = false) {
-        alt.toggleGameControls(true);
+    static async close() {
+        AthenaClient.webview.closePages([PAGE_NAME], true);
+        InternalFunctions.onClose();
+    }
 
+    static async onClose() {
         AthenaClient.webview.unfocus();
         AthenaClient.webview.showCursor(false);
-
+        alt.toggleGameControls(true);
         alt.Player.local.isMenuOpen = false;
+    }
 
-        if (shouldClosePage) {
-            AthenaClient.webview.closePages([PAGE_NAME], true);
-        }
-
-        if (isNotCancel) {
-            return;
-        }
+    static async onEscape() {
+        InternalFunctions.onClose();
 
         if (inputMenu.callback) {
             inputMenu.callback(null);
@@ -69,12 +66,16 @@ class InternalFunctions implements ViewModel {
             alt.emitServer(inputMenu.serverEvent, results);
         }
 
-        InternalFunctions.close(true, true);
+        InternalFunctions.close();
     }
 
     static async ready() {
-        const view = await AthenaClient.webview.get();
-        view.emit(`${PAGE_NAME}:SetMenu`, inputMenu.title, inputMenu.options, inputMenu.generalOptions);
+        AthenaClient.webview.emit(
+            View_Events_Input_Menu.SetMenu,
+            inputMenu.title,
+            inputMenu.options,
+            inputMenu.generalOptions,
+        );
     }
 }
 
